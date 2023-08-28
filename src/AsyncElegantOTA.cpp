@@ -83,7 +83,9 @@ void AsyncElegantOtaClass::begin(AsyncWebServer *server, const char* username, c
                 int cmd = (filename == "filesystem") ? U_SPIFFS : U_FLASH;
                 if (!Update.begin(UPDATE_SIZE_UNKNOWN, cmd)) { // Start with max available size
             #endif
+            #ifdef Serial
                 Update.printError(Serial);
+            #endif
                 return request->send(400, "text/plain", "OTA could not begin");
             }
         }
@@ -97,7 +99,9 @@ void AsyncElegantOtaClass::begin(AsyncWebServer *server, const char* username, c
             
         if (final) { // if the final flag is set then this is the last frame of data
             if (!Update.end(true)) { //true to set the size to the current progress
+            #ifdef Serial
                 Update.printError(Serial);
+            #endif
                 return request->send(400, "text/plain", "Could not end OTA");
             }
         }else{
